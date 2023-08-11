@@ -13,6 +13,7 @@ import useResourceAttribute from 'hooks/useResourceAttribute';
 import {
 	convertRawQueriesToTraceSelectedTags,
 	resourceAttributesToTagFilterItems,
+	resourceAttributesToTagFilterItemsToTrace,
 } from 'hooks/useResourceAttribute/utils';
 import history from 'lib/history';
 import { useCallback, useMemo, useState } from 'react';
@@ -103,6 +104,13 @@ function Application(): JSX.Element {
 		[queries],
 	);
 
+	const tagFilterItemsTrace = useMemo(
+		() =>
+			handleNonInQueryRange(resourceAttributesToTagFilterItemsToTrace(queries)) ||
+			[],
+		[queries],
+	);
+
 	const topLevelOperationsRoute = useMemo(
 		() => (topLevelOperations ? topLevelOperations[servicename || ''] : []),
 		[servicename, topLevelOperations],
@@ -189,7 +197,7 @@ function Application(): JSX.Element {
 						handleGraphClick={handleGraphClick}
 						selectedTimeStamp={selectedTimeStamp}
 						selectedTraceTags={selectedTraceTags}
-						tagFilterItems={tagFilterItems}
+						tagFilterItems={tagFilterItemsTrace}
 						topLevelOperationsRoute={topLevelOperationsRoute}
 					/>
 				</Col>

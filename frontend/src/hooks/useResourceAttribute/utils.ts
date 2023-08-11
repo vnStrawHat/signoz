@@ -61,12 +61,33 @@ export const convertRawQueriesToTraceSelectedTags = (
 	}));
 
 /* Convert resource attributes to tagFilter items for queryBuilder */
+export const resourceAttributesToTagFilterItemsToTrace = (
+	queries: IResourceAttribute[],
+): TagFilterItem[] =>
+	queries.map((res) => ({
+		id: `${res.id}`,
+		key: {
+			key: convertMetricKeyToTrace(res.tagKey),
+			isColumn: false,
+			type: 'resource',
+			dataType: 'string',
+		},
+		op: `${res.operator}`,
+		value: `${res.tagValue}`.split(','),
+	}));
+
+/* Convert resource attributes to tagFilter items for queryBuilder */
 export const resourceAttributesToTagFilterItems = (
 	queries: IResourceAttribute[],
 ): TagFilterItem[] =>
 	queries.map((res) => ({
 		id: `${res.id}`,
-		key: { key: res.tagKey, isColumn: false, type: null, dataType: null },
+		key: {
+			key: res.tagKey,
+			isColumn: false,
+			type: 'resource',
+			dataType: 'string',
+		},
 		op: `${res.operator}`,
 		value: `${res.tagValue}`.split(','),
 	}));
