@@ -28,7 +28,6 @@ import AppReducer from 'types/reducer/app';
 import { eventEmitter } from 'utils/getEventEmitter';
 import { v4 } from 'uuid';
 
-import { UpdateDashboard } from '../utils';
 import WidgetHeader from '../WidgetHeader';
 import FullView from './FullView';
 import { PANEL_TYPES_VS_FULL_VIEW_TABLE } from './FullView/contants';
@@ -66,13 +65,11 @@ function WidgetGraphComponent({
 		[data, name],
 	);
 
-	const { setLayouts } = useDashboard();
+	const { setLayouts, selectedDashboard } = useDashboard();
 
 	const [graphsVisibilityStates, setGraphsVisilityStates] = useState<boolean[]>(
 		localstoredVisibilityStates,
 	);
-
-	const { selectedDashboard } = useDashboard();
 
 	const canModifyChart = useChartMutable({
 		panelType: widget.panelTypes,
@@ -167,6 +164,7 @@ function WidgetGraphComponent({
 		const uuid = v4();
 
 		const layout = [
+			...(selectedDashboard.data.layout || []),
 			{
 				i: uuid,
 				w: 6,
@@ -174,33 +172,38 @@ function WidgetGraphComponent({
 				h: 2,
 				y: 0,
 			},
-			...(selectedDashboard.data.layout || []),
 		];
 
-		if (widget) {
-			await UpdateDashboard(
-				{
-					data: selectedDashboard.data,
-					generateWidgetId: uuid,
-					graphType: widget?.panelTypes,
-					selectedDashboard,
+		updateDashboardMutation.mutateAsync(
+			{
+				...selectedDashboard,
+				data: {
+					...selectedDashboard.data,
 					layout,
-					widgetData: widget,
-					isRedirected: false,
+					widgets: [
+						...(selectedDashboard.data.widgets || []),
+						{
+							...{
+								...widget,
+								id: uuid,
+							},
+						},
+					],
 				},
-				notifications,
-			).then(() => {
-				notifications.success({
-					message: 'Panel cloned successfully, redirecting to new copy.',
-				});
-
-				const queryParams = {
-					graphType: widget?.panelTypes,
-					widgetId: uuid,
-				};
-				history.push(`${pathname}/new?${createQueryParams(queryParams)}`);
-			});
-		}
+			},
+			{
+				onSuccess: () => {
+					notifications.success({
+						message: 'Panel cloned successfully, redirecting to new copy.',
+					});
+					const queryParams = {
+						graphType: widget?.panelTypes,
+						widgetId: uuid,
+					};
+					history.push(`${pathname}/new?${createQueryParams(queryParams)}`);
+				},
+			},
+		);
 	};
 
 	const handleOnView = (): void => {
