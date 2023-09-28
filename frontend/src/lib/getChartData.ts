@@ -62,27 +62,36 @@ const getChartData = ({
 		.map((e) => e.map((e) => e.second))
 		.reduce((a, b) => [...a, ...b], []);
 
-	return {
-		datasets: alldata.map((e, index) => {
-			const datasetBaseConfig = {
-				index,
-				label: allLabels[index],
-				borderColor: colors[index % colors.length] || 'red',
-				data: e,
-				borderWidth: 1.5,
-				spanGaps: true,
-				animations: false,
-				showLine: true,
-				pointRadius: 0,
-			};
+	const updatedLabels = response
+		.map((e) => e.map((e) => e.first))
+		.reduce((a, b) => [...a, ...b], [])[0];
 
-			return createDataset
-				? createDataset(e, index, allLabels)
-				: datasetBaseConfig;
-		}),
-		labels: response
-			.map((e) => e.map((e) => e.first))
-			.reduce((a, b) => [...a, ...b], [])[0],
+	return {
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		datasets: alldata
+			.map((e, index) => {
+				const datasetBaseConfig = {
+					index,
+					label: allLabels[index],
+					borderColor: colors[index % colors.length] || 'red',
+					data: e.map((num, numIndex) => ({
+						x: updatedLabels[numIndex],
+						y: num,
+					})),
+					borderWidth: 1.5,
+					spanGaps: true,
+					animations: false,
+					showLine: true,
+					pointRadius: 0,
+				};
+
+				return createDataset
+					? createDataset(e, index, allLabels)
+					: datasetBaseConfig;
+			})
+			.slice(0, 100),
+		labels: updatedLabels,
 	};
 };
 

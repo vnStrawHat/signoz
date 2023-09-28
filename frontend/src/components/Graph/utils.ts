@@ -52,9 +52,8 @@ export const getGraphOptions = (
 	data: ChartData,
 	// eslint-disable-next-line sonarjs/cognitive-complexity
 ): CustomChartOptions => ({
-	animation: {
-		duration: animate ? 200 : 0,
-	},
+	animation: false,
+	parsing: false,
 	responsive: true,
 	maintainAspectRatio: false,
 	interaction: {
@@ -133,6 +132,10 @@ export const getGraphOptions = (
 			!!onDragSelect,
 			currentTheme === 'dark' ? 'white' : 'black',
 		),
+		decimation: {
+			enabled: false,
+			algorithm: 'min-max',
+		},
 	},
 	layout: {
 		padding: 0,
