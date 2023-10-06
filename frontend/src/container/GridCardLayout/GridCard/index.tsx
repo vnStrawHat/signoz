@@ -20,7 +20,6 @@ import WidgetGraphComponent from './WidgetGraphComponent';
 
 function GridCardGraph({
 	widget,
-	name,
 	onClickHandler,
 	headerMenuList = [MenuItemKeys.View],
 	isQueryEnabled,
@@ -110,11 +109,11 @@ function GridCardGraph({
 				errorMessage={errorMessage}
 				data={chartData.data}
 				isWarning={chartData.isWarning}
-				name={name}
 				onDragSelect={onDragSelect}
 				threshold={threshold}
 				headerMenuList={headerMenuList}
 				onClickHandler={onClickHandler}
+				name={widget.id}
 			/>
 
 			{isEmptyLayout && <EmptyWidget />}

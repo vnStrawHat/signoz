@@ -115,7 +115,6 @@ function GraphLayout({
 							<Card $panelType={currentWidget?.panelTypes || PANEL_TYPES.TIME_SERIES}>
 								<GridCard
 									widget={currentWidget || ({ id } as Widgets)}
-									name={currentWidget?.id || ''}
 									headerMenuList={headerMenuList}
 								/>
 							</Card>

@@ -14,7 +14,7 @@ import { PANEL_TYPES } from 'constants/queryBuilder';
 import ROUTES from 'constants/routes';
 import useComponentPermission from 'hooks/useComponentPermission';
 import history from 'lib/history';
-import { ReactNode, useCallback, useMemo, useState } from 'react';
+import { memo, ReactNode, useCallback, useMemo, useState } from 'react';
 import { UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
 import { AppState } from 'store/reducers';
@@ -238,4 +238,4 @@ WidgetHeader.defaultProps = {
 	headerMenuList: [MenuItemKeys.View],
 };
 
-export default WidgetHeader;
+export default memo(WidgetHeader);

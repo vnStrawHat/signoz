@@ -31,7 +31,6 @@ export interface WidgetGraphComponentProps {
 
 export interface GridCardGraphProps {
 	widget: Widgets;
-	name: string;
 	onDragSelect?: (start: number, end: number) => void;
 	onClickHandler?: GraphOnClickHandler;
 	threshold?: ReactNode;
