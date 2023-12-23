@@ -66,9 +66,7 @@ type Server struct {
 	// logger       *zap.Logger
 	// tracer opentracing.Tracer // TODO make part of flags.Service
 	serverOptions *ServerOptions
-	conn          net.Listener
 	ruleManager   *rules.Manager
-	separatePorts bool
 
 	// public http router
 	httpConn   net.Listener
@@ -125,7 +123,7 @@ func NewServer(serverOptions *ServerOptions) (*Server, error) {
 		go clickhouseReader.Start(readerReady)
 		reader = clickhouseReader
 	} else {
-		return nil, fmt.Errorf("Storage type: %s is not supported in query service", storage)
+		return nil, fmt.Errorf("storage type: %s is not supported in query service", storage)
 	}
 	skipConfig := &model.SkipConfig{}
 	if serverOptions.SkipTopLvlOpsPath != "" {
@@ -290,7 +288,7 @@ func loggingMiddleware(next http.Handler) http.Handler {
 		path, _ := route.GetPathTemplate()
 		startTime := time.Now()
 		next.ServeHTTP(w, r)
-		zap.S().Info(path+"\ttimeTaken:"+time.Now().Sub(startTime).String(), zap.Duration("timeTaken", time.Now().Sub(startTime)), zap.String("path", path))
+		zap.S().Info(path+"\ttimeTaken:"+time.Since(startTime).String(), zap.Duration("timeTaken", time.Since(startTime)), zap.String("path", path))
 	})
 }
 
@@ -302,7 +300,7 @@ func loggingMiddlewarePrivate(next http.Handler) http.Handler {
 		path, _ := route.GetPathTemplate()
 		startTime := time.Now()
 		next.ServeHTTP(w, r)
-		zap.S().Info(path+"\tprivatePort: true \ttimeTaken"+time.Now().Sub(startTime).String(), zap.Duration("timeTaken", time.Now().Sub(startTime)), zap.String("path", path), zap.Bool("tprivatePort", true))
+		zap.S().Info(path+"\tprivatePort: true \ttimeTaken"+time.Since(startTime).String(), zap.Duration("timeTaken", time.Since(startTime)), zap.String("path", path), zap.Bool("tprivatePort", true))
 	})
 }
 
