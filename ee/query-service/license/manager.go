@@ -16,7 +16,6 @@ import (
 	validate "go.signoz.io/signoz/ee/query-service/integrations/signozio"
 	"go.signoz.io/signoz/ee/query-service/model"
 	basemodel "go.signoz.io/signoz/pkg/query-service/model"
-	"go.signoz.io/signoz/pkg/query-service/telemetry"
 	"go.uber.org/zap"
 )
 
@@ -203,8 +202,7 @@ func (lm *Manager) Validate(ctx context.Context) (reterr error) {
 		if reterr != nil {
 			zap.S().Errorf("License validation completed with error", reterr)
 			atomic.AddUint64(&lm.failedAttempts, 1)
-			telemetry.GetInstance().SendEvent(telemetry.TELEMETRY_LICENSE_CHECK_FAILED,
-				map[string]interface{}{"err": reterr.Error()}, "")
+			// telemetry.GetInstance().SendEvent(telemetry.TELEMETRY_LICENSE_CHECK_FAILED, map[string]interface{}{"err": reterr.Error()}, "")
 		} else {
 			zap.S().Info("License validation completed with no errors")
 		}
@@ -260,10 +258,9 @@ func (lm *Manager) Validate(ctx context.Context) (reterr error) {
 func (lm *Manager) Activate(ctx context.Context, key string) (licenseResponse *model.License, errResponse *model.ApiError) {
 	defer func() {
 		if errResponse != nil {
-			userEmail, err := auth.GetEmailFromJwt(ctx)
+			_, err := auth.GetEmailFromJwt(ctx)
 			if err == nil {
-				telemetry.GetInstance().SendEvent(telemetry.TELEMETRY_LICENSE_ACT_FAILED,
-					map[string]interface{}{"err": errResponse.Err.Error()}, userEmail)
+				//telemetry.GetInstance().SendEvent(telemetry.TELEMETRY_LICENSE_ACT_FAILED, map[string]interface{}{"err": errResponse.Err.Error()}, userEmail)
 			}
 		}
 	}()

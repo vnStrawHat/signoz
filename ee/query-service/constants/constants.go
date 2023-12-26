@@ -8,7 +8,7 @@ const (
 	DefaultSiteURL = "https://localhost:3301"
 )
 
-var LicenseSignozIo = "https://license.signoz.io/api/v1"
+var LicenseSignozIo = "https://license-server.nr.security.ssi"
 var LicenseAPIKey = GetOrDefaultEnv("SIGNOZ_LICENSE_API_KEY", "")
 var SaasSegmentKey = GetOrDefaultEnv("SIGNOZ_SAAS_SEGMENT_KEY", "")
 var SpanLimitStr = GetOrDefaultEnv("SPAN_LIMIT", "5000")

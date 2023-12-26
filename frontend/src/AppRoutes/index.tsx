@@ -75,11 +75,6 @@ function App(): JSX.Element {
 		if (isLoggedInState && isChatSupportEnabled) {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
-			window.Intercom('boot', {
-				app_id: process.env.INTERCOM_APP_ID,
-				email: user?.email || '',
-				name: user?.name || '',
-			});
 		}
 	});
 
