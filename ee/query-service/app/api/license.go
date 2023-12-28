@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -82,6 +83,7 @@ func (ah *APIHandler) checkout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	hClient := &http.Client{}
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	req, err := http.NewRequest("POST", constants.LicenseSignozIo+"/checkout", r.Body)
 	if err != nil {
 		RespondError(w, model.InternalError(err), nil)
@@ -115,6 +117,7 @@ func (ah *APIHandler) getBilling(w http.ResponseWriter, r *http.Request) {
 	billingURL := fmt.Sprintf("%s/usage?licenseKey=%s", constants.LicenseSignozIo, licenseKey)
 
 	hClient := &http.Client{}
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	req, err := http.NewRequest("GET", billingURL, nil)
 	if err != nil {
 		RespondError(w, model.InternalError(err), nil)
@@ -173,6 +176,7 @@ func (ah *APIHandler) listLicensesV2(w http.ResponseWriter, r *http.Request) {
 	// Fetch trial details
 	hClient := &http.Client{}
 	url := fmt.Sprintf("%s/trial?licenseKey=%s", constants.LicenseSignozIo, currentActiveLicenseKey)
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		zap.S().Error("Error while creating request for trial details", err)
@@ -233,6 +237,7 @@ func (ah *APIHandler) portalSession(w http.ResponseWriter, r *http.Request) {
 	}
 
 	hClient := &http.Client{}
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	req, err := http.NewRequest("POST", constants.LicenseSignozIo+"/portal", r.Body)
 	if err != nil {
 		RespondError(w, model.InternalError(err), nil)
