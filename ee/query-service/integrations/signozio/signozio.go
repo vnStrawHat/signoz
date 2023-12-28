@@ -46,7 +46,7 @@ func ActivateLicense(key, siteId string) (*ActivationResponse, *model.ApiError) 
 	}
 
 	reqString, _ := json.Marshal(licenseReq)
-	httpResponse, err := http.Post(C.Prefix+"/licenses/activate", APPLICATION_JSON, bytes.NewBuffer(reqString))
+	httpResponse, err := http.Post(C.Prefix+"/signoz/licenses/activate", APPLICATION_JSON, bytes.NewBuffer(reqString))
 
 	if err != nil {
 		zap.S().Errorf("failed to connect to license.signoz.io", err)
@@ -60,10 +60,6 @@ func ActivateLicense(key, siteId string) (*ActivationResponse, *model.ApiError) 
 	}
 
 	defer httpResponse.Body.Close()
-
-	zap.S().Errorf("URL", C.Prefix+"/licenses/activate")
-	zap.S().Errorf("httpResponse.StatusCode", httpResponse.StatusCode)
-	zap.S().Errorf("httpResponse.Data", httpBody)
 
 	// read api request result
 	result := ActivationResult{}
@@ -92,7 +88,7 @@ func ValidateLicense(activationId string) (*ActivationResponse, *model.ApiError)
 	}
 
 	reqString, _ := json.Marshal(validReq)
-	response, err := http.Post(C.Prefix+"/licenses/validate", APPLICATION_JSON, bytes.NewBuffer(reqString))
+	response, err := http.Post(C.Prefix+"/signoz/licenses/validate", APPLICATION_JSON, bytes.NewBuffer(reqString))
 
 	if err != nil {
 		return nil, model.BadRequest(errors.Wrap(err, "unable to connect with license.signoz.io, please check your network connection"))
