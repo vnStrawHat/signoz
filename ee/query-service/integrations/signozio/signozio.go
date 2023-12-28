@@ -61,6 +61,10 @@ func ActivateLicense(key, siteId string) (*ActivationResponse, *model.ApiError) 
 
 	defer httpResponse.Body.Close()
 
+	zap.S().Errorf("URL", C.Prefix+"/licenses/activate")
+	zap.S().Errorf("httpResponse.StatusCode", httpResponse.StatusCode)
+	zap.S().Errorf("httpResponse.Data", httpBody)
+
 	// read api request result
 	result := ActivationResult{}
 	err = json.Unmarshal(httpBody, &result)
