@@ -3,6 +3,7 @@ package signozio
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -38,6 +39,7 @@ func init() {
 
 // ActivateLicense sends key to license.signoz.io and gets activation data
 func ActivateLicense(key, siteId string) (*ActivationResponse, *model.ApiError) {
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	licenseReq := map[string]string{
 		"key":    key,
 		"siteId": siteId,
@@ -80,6 +82,7 @@ func ActivateLicense(key, siteId string) (*ActivationResponse, *model.ApiError) 
 
 // ValidateLicense validates the license key
 func ValidateLicense(activationId string) (*ActivationResponse, *model.ApiError) {
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	validReq := map[string]string{
 		"activationId": activationId,
 	}
